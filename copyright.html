@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>版权信息 · Rika</title>
+<style>
+  :root {
+    --bg: #0c0d10;
+    --ink: #ececef;
+    --muted: #8b8e97;
+    --accent: #c9a15a;
+    --line: rgba(255,255,255,0.1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.8;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: clamp(4rem, 10vh, 7rem) 1.5rem 4rem;
+    text-align: center;
+  }
+
+  .kicker {
+    font-size: 0.78rem;
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.4rem;
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+    font-weight: 300;
+    letter-spacing: 0.16em;
+  }
+
+  .rule {
+    width: 60px;
+    height: 1px;
+    background: var(--accent);
+    margin: 2rem auto;
+  }
+
+  .statement {
+    color: var(--muted);
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+    margin: 0 auto;
+    max-width: 480px;
+  }
+
+  .statement strong { color: var(--ink); font-weight: 500; }
+
+  .contact {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .contact .label {
+    font-size: 0.78rem;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+  }
+
+  .contact a {
+    display: inline-block;
+    margin-top: 0.8rem;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 0.2rem;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .contact a:hover { color: var(--accent); }
+
+  .back {
+    display: inline-block;
+    margin-top: 3rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    padding: 0.5rem 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .back:hover { color: var(--ink); border-color: var(--accent); }
+
+  footer {
+    text-align: center;
+    padding: 2.5rem 1.5rem 3rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    border-top: 1px solid var(--line);
+  }
+
+  footer span { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<main>
+  <p class="kicker">Copyright</p>
+  <h1>版权信息</h1>
+  <div class="rule"></div>
+
+  <p class="statement">
+    本站所有摄影作品均由 <strong>Rika</strong> 拍摄与制作，保留所有权利。
+    未经作者书面许可，任何人不得以任何形式转载、复制、传播或用于商业用途。
+  </p>
+
+  <div class="contact">
+    <p class="label">联系方式</p>
+    <a href="mailto:2293840045@qq.com">2293840045@qq.com</a>
+  </div>
+
+  <a class="back" href="index.html">← 返回主页</a>
+</main>
+
+<footer>
+  <span>✦</span> © 2026 Rika · 保留所有权利 <span>✦</span>
+</footer>
+
+</body>
+</html>

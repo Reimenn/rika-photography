@@ -139,11 +139,12 @@
     color: var(--muted);
   }
 
-  .card .desc {
+  .card .date {
     margin-top: 0.3rem;
     color: var(--muted);
     font-size: 0.85rem;
     letter-spacing: 0.12em;
+    font-variant-numeric: tabular-nums;
   }
 
   .card .enter {
@@ -165,22 +166,6 @@
     margin-top: 0.2rem;
   }
 
-  /* ---------- placeholder card ---------- */
-  .card.soon .thumb {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px dashed var(--line);
-    background: transparent;
-    aspect-ratio: 3 / 2;
-  }
-
-  .card.soon .soon-text {
-    color: var(--muted);
-    font-size: 0.85rem;
-    letter-spacing: 0.4em;
-  }
-
   /* ---------- footer ---------- */
   footer {
     text-align: center;
@@ -192,6 +177,21 @@
   }
 
   footer span { color: var(--accent); }
+
+  footer .copy {
+    margin-top: 0.7rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+  }
+
+  footer a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  footer a:hover { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -207,17 +207,19 @@
 
 <footer>
   <span>✦</span> 摄影作品集 <span>✦</span>
+  <p class="copy">© 2026 Rika · 保留所有权利</p>
+  <p class="copy"><a href="copyright.html">版权信息</a> · <a href="mailto:2293840045@qq.com">2293840045@qq.com</a></p>
 </footer>
 
 <script>
   const albums = [
     {
       title: "昌平",
-      sub: "风景",
-      desc: "山野与光影",
-      cover: "昌平/DSC02942.jpg",
+      sub: "十三陵水库",
+      date: "2026/9/1",
+      cover: "昌平-十三陵水库/DSC02973.jpg",
       count: 7,
-      link: "昌平/changping.html"
+      link: "昌平-十三陵水库/changping.html"
     }
   ];
 
@@ -236,22 +238,13 @@
       <div class="info">
         <div>
           <h2>${a.title} <em>${a.sub}</em></h2>
-          <p class="desc">${a.desc}</p>
+          <p class="date">${a.date}</p>
           <p class="meta">${a.count} 张作品</p>
         </div>
         <span class="enter">进入 <span class="arrow">→</span></span>
       </div>`;
     grid.appendChild(card);
   });
-
-  const soon = document.createElement("div");
-  soon.className = "card soon";
-  soon.innerHTML = `
-    <div class="thumb"><span class="soon-text">敬请期待</span></div>
-    <div class="info">
-      <div><h2><em>更多摄影集</em></h2><p class="desc">正在筹备中</p></div>
-    </div>`;
-  grid.appendChild(soon);
 
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {

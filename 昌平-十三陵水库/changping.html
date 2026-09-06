@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>昌平 · 风景摄影集</title>
+<title>昌平 · 十三陵水库 · 摄影集</title>
 <style>
   :root {
     --bg: #0c0d10;
@@ -117,6 +117,21 @@
     letter-spacing: 0.3em;
   }
 
+  .caption .copy {
+    margin-top: 0.6rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+  }
+
+  .caption .copy a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .caption .copy a:hover { color: var(--accent); }
+
   .rule {
     width: 1px;
     height: 56px;
@@ -215,6 +230,12 @@
     transform: scale(1.4);
   }
 
+  .dots button:hover {
+    background: var(--accent);
+    transform: scale(1.8);
+    box-shadow: 0 0 0 6px rgba(201,161,90,0.15);
+  }
+
   /* ---------- back link ---------- */
   .back {
     position: fixed;
@@ -251,7 +272,7 @@
     <div class="veil"></div>
     <div class="caption">
       <p class="kicker">Photography</p>
-      <h1>昌平 <em>风景</em></h1>
+      <h1>昌平 <em>十三陵水库</em></h1>
     </div>
     <div class="hint">向下翻阅</div>
   </section>
@@ -263,13 +284,14 @@
     <div class="veil"></div>
     <div class="caption">
       <h2>至此 · 圆满</h2>
-      <p class="thanks">感谢观看 · 昌平风景摄影集</p>
+      <p class="thanks">感谢观看 · 昌平 · 十三陵水库</p>
+      <p class="copy">© 2026 Rika · 保留所有权利 · <a href="../copyright.html">版权信息</a></p>
       <div class="rule"></div>
     </div>
   </section>
 
   <div class="hud" id="hud">
-    <div class="brand">昌平 · 风景</div>
+    <div class="brand">昌平 · 十三陵水库</div>
     <div class="count"><span id="cur">02</span> <span class="sep">/</span> <span class="total" id="total">07</span></div>
   </div>
 
