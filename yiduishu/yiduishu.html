@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>一对鼠 · 摄影集</title>
+<style>
+  :root {
+    --bg: #0c0d10;
+    --ink: #ececef;
+    --muted: #8b8e97;
+    --accent: #c9a15a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+
+  .screen {
+    position: relative;
+    height: 100vh;
+    height: 100svh;
+    scroll-snap-align: start;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .screen img.bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* photo screens: one full image per screen, never cropped */
+  .screen.photo .bg {
+    position: relative;
+    inset: auto;
+    max-width: 92vw;
+    max-height: 88vh;
+    max-height: 88svh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+  }
+
+  /* ---------- cover text ---------- */
+  .veil {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .screen.cover .veil {
+    background: linear-gradient(to bottom, rgba(12,13,16,0.35), rgba(12,13,16,0.55));
+  }
+
+  .caption {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 0 1.5rem;
+  }
+
+  .kicker {
+    font-size: 0.8rem;
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.4rem;
+  }
+
+  .caption h1 {
+    font-size: clamp(3rem, 12vw, 8rem);
+    font-weight: 300;
+    letter-spacing: 0.14em;
+    line-height: 1.05;
+    text-shadow: 0 4px 40px rgba(0,0,0,0.5);
+  }
+
+  .caption h1 em {
+    font-style: normal;
+    font-weight: 200;
+    color: rgba(255,255,255,0.85);
+  }
+
+  /* ---------- scroll hint ---------- */
+  .hint {
+    position: absolute;
+    bottom: 2.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    animation: float 2.4s ease-in-out infinite;
+  }
+
+  .hint::before {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 44px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    margin: 0 auto 0.8rem;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, 8px); }
+  }
+
+  /* ---------- left HUD ---------- */
+  .hud {
+    position: fixed;
+    left: 2rem;
+    bottom: 3rem;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    pointer-events: none;
+  }
+
+  .hud.show { opacity: 1; transform: translateY(0); }
+
+  .hud .brand {
+    writing-mode: vertical-rl;
+    letter-spacing: 0.45em;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .hud .count {
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hud .count .sep { color: var(--muted); margin: 0 0.2em; }
+  .hud .count .total { color: var(--muted); }
+
+  /* ---------- side dots ---------- */
+  .dots {
+    position: fixed;
+    right: 1.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .dots button {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.25);
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+
+  .dots button.active {
+    background: var(--accent);
+    transform: scale(1.4);
+  }
+
+  .dots button:hover {
+    background: var(--accent);
+    transform: scale(1.8);
+    box-shadow: 0 0 0 6px rgba(201,161,90,0.15);
+  }
+
+  /* ---------- back link ---------- */
+  .back {
+    position: fixed;
+    top: 1.6rem;
+    left: 2rem;
+    z-index: 20;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--line, rgba(255,255,255,0.15));
+    border-radius: 999px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+  }
+
+  .back:hover { color: var(--ink); border-color: var(--accent); }
+
+  @media (max-width: 720px) { .back { left: 1rem; top: 1rem; } }
+
+  /* ---------- footer / copyright ---------- */
+  .foot {
+    position: fixed;
+    right: 1.4rem;
+    bottom: 1.2rem;
+    z-index: 10;
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    white-space: nowrap;
+  }
+
+  .foot a {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .foot a:hover { color: var(--accent); }
+
+  /* ---------- responsive: portrait / narrow ---------- */
+  @media (max-width: 720px) {
+    .hud { left: 1rem; bottom: 1.5rem; }
+    .dots { right: 0.7rem; }
+    .foot { right: 1rem; bottom: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+  <a class="back" href="../index.html">← 主页</a>
+
+  <section class="screen cover">
+    <img class="bg" src="DSC02681.jpg" alt="封面">
+    <div class="veil"></div>
+    <div class="caption">
+      <p class="kicker">Photography</p>
+      <h1>一对鼠</h1>
+    </div>
+    <div class="hint">向下翻阅</div>
+  </section>
+
+  <div id="photos"></div>
+
+  <div class="hud" id="hud">
+    <div class="brand">一对鼠</div>
+    <div class="count"><span id="cur">01</span> <span class="sep">/</span> <span class="total" id="total">03</span></div>
+  </div>
+
+  <nav class="dots" id="dots"></nav>
+
+  <div class="foot">© 2026 Rika · <a href="../copyright.html">版权信息</a></div>
+
+<script>
+  const photos = [
+    "DSC02686.jpg",
+    "DSC02696.jpg"
+  ];
+
+  let screens = [];
+  let dotEls = [];
+  let current = 0;
+  let locked = false;
+
+  function build() {
+    const container = document.getElementById("photos");
+    container.innerHTML = "";
+    photos.forEach(src => {
+      const sec = document.createElement("section");
+      sec.className = "screen photo";
+      const img = document.createElement("img");
+      img.className = "bg";
+      img.src = src;
+      img.alt = "照片";
+      sec.appendChild(img);
+      container.appendChild(sec);
+    });
+  }
+
+  function init() {
+    screens = [...document.querySelectorAll(".screen")];
+    const dots = document.getElementById("dots");
+    dots.innerHTML = "";
+    dotEls = [];
+    screens.forEach((_, i) => {
+      const b = document.createElement("button");
+      b.setAttribute("aria-label", "第 " + (i + 1) + " 页");
+      b.addEventListener("click", () => goTo(i));
+      dots.appendChild(b);
+      dotEls.push(b);
+    });
+    update();
+  }
+
+  function nearest() {
+    const mid = window.innerHeight / 2;
+    let idx = 0, best = Infinity;
+    screens.forEach((s, i) => {
+      const r = s.getBoundingClientRect();
+      const d = Math.abs(r.top + r.height / 2 - mid);
+      if (d < best) { best = d; idx = i; }
+    });
+    return idx;
+  }
+
+  function goTo(i) {
+    i = Math.max(0, Math.min(screens.length - 1, i));
+    if (i === current && !locked) return;
+    current = i;
+    locked = true;
+    screens[i].scrollIntoView({ behavior: "smooth" });
+    update();
+    setTimeout(() => { locked = false; }, 750);
+  }
+
+  function update() {
+    dotEls.forEach((d, i) => d.classList.toggle("active", i === current));
+    const hud = document.getElementById("hud");
+    hud.classList.toggle("show", current > 0);
+    document.getElementById("cur").textContent = String(current + 1).padStart(2, "0");
+    document.getElementById("total").textContent = String(screens.length).padStart(2, "0");
+  }
+
+  window.addEventListener("wheel", (e) => {
+    if (locked) return;
+    if (Math.abs(e.deltaY) < 6) return;
+    e.preventDefault();
+    goTo(current + (e.deltaY > 0 ? 1 : -1));
+  }, { passive: false });
+
+  // touch: one swipe = one photo, image stays centered
+  let startX = null, startY = null, suppressTouch = false;
+  window.addEventListener("touchstart", (e) => {
+    if (locked) return;
+    const t = e.touches[0];
+    startX = t.clientX;
+    startY = t.clientY;
+    suppressTouch = !!e.target.closest("a, button");
+  }, { passive: true });
+
+  window.addEventListener("touchmove", (e) => {
+    if (suppressTouch || startY === null) return;
+    e.preventDefault();
+  }, { passive: false });
+
+  window.addEventListener("touchend", (e) => {
+    const suppress = suppressTouch || startY === null;
+    suppressTouch = false;
+    if (suppress) { startX = startY = null; return; }
+    const t = e.changedTouches[0];
+    const dy = t.clientY - startY;
+    const dx = t.clientX - startX;
+    startX = startY = null;
+    if (Math.abs(dx) > Math.abs(dy)) return;
+    if (dy < -30) goTo(current + 1);
+    else if (dy > 30) goTo(current - 1);
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown" || e.key === "PageDown" || e.key === " ") goTo(current + 1);
+    else if (e.key === "ArrowUp" || e.key === "PageUp") goTo(current - 1);
+    else if (e.key === "Home") goTo(0);
+    else if (e.key === "End") goTo(screens.length - 1);
+  });
+
+  // keep current in sync when user drags the scrollbar / touch-scrolls
+  let scrollTimer;
+  window.addEventListener("scroll", () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      current = nearest();
+      update();
+    }, 150);
+  });
+
+  build();
+  init();
+</script>
+</body>
+</html>
